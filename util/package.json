@@ -1,0 +1,12 @@
+{
+  "name": "util",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --watchAll --config ../jest.config.ts"
+  },
+  "dependencies": {
+    "winston": "^3.3.3"
+  }
+}
