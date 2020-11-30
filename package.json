@@ -1,0 +1,10 @@
+{
+  "name": "AoC2020",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "repository": "git@github.com:daviddm/AoC2020.git",
+  "author": "David de Meijere <david.de.meijere@gmail.com>",
+  "license": "MIT",
+  "workspaces": ["*"]
+}
