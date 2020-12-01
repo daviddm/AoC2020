@@ -1,10 +1,10 @@
 {
-  "name": "1",
+  "name": "day1",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --watchAll"
+    "test": "jest --watch --config ../jest.config.ts ./1"
   },
   "dependencies": {}
 }
