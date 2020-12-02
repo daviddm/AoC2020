@@ -6,15 +6,18 @@ export const splitOnNewline = (
   s: string,
   options?: splitOnNewlineOptions
 ): string[] => {
-  let res = s.split("\n");
+  let res = s.split(/\r?\n/);
 
   if (options?.skipLast) {
-    res.shift()
+    res.shift();
   }
 
   if (options?.skipFirst) {
-    res.pop()
+    res.pop();
   }
 
   return res;
 };
+
+export const removeEmptyLines = (lines: any[]) =>
+  lines.filter((line) => line !== "");

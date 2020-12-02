@@ -1,9 +1,7 @@
-import { splitOnNewline } from "./string";
+import { removeEmptyLines, splitOnNewline } from "./string";
 
 describe("String", () => {
-
   describe("splitOnNewline", () => {
-
     let s: string;
 
     beforeEach(async () => {
@@ -22,7 +20,16 @@ describe("String", () => {
     it("should return skip first element", () => {
       expect(splitOnNewline(s, { skipFirst: true }).length).toBe(1);
     });
-
   });
 
+  describe("removeEmptyLines", () => {
+    let lines: string[];
+    beforeEach(async () => {
+      lines = ["test", ""];
+    });
+
+    it("should return [test]", () => {
+      expect(removeEmptyLines(lines)).toEqual(expect.arrayContaining(["test"]));
+    });
+  });
 });

@@ -1,6 +1,6 @@
 import { readFile } from "util/file";
 import logger from "util/logger";
-import { splitOnNewline } from "util/string";
+import { splitOnNewline, removeEmptyLines } from "util/string";
 import { sledRentalValidator, tobogganValidator, validatePasswords } from "./2";
 
 describe("2", () => {
@@ -64,20 +64,20 @@ describe("2", () => {
 
     beforeEach(async () => {
       const res = await readFile("input.txt");
-      lines = splitOnNewline(res);
+      lines = removeEmptyLines(splitOnNewline(res));
     });
 
     it("Star 1", async () => {
       const result = validatePasswords(lines, sledRentalValidator);
 
-      logger.info("Star1: allowed password", result);
+      logger.info("Star1: allowed passwords", result);
       expect(result).toBe(643);
     });
 
     it("Star 2", async () => {
       const result = validatePasswords(lines, tobogganValidator);
 
-      logger.info("Star2: allowed password", result);
+      logger.info("Star2: allowed passwords", result);
       expect(result).toBe(388);
     });
   });

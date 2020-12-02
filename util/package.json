@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --watchAll --config ../jest.config.ts"
+    "test": "jest --watchAll --config ../jest.config.ts ./util"
   },
   "dependencies": {
     "winston": "^3.3.3"
