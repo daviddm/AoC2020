@@ -7,6 +7,7 @@ export const splitOnNewline = (
   options?: splitOnNewlineOptions
 ): string[] => {
   let res = s.split(/\r?\n/);
+  // let res = s.split(/\n/);
 
   if (options?.skipLast) {
     res.shift();

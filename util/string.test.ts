@@ -9,7 +9,14 @@ describe("String", () => {
     });
 
     it("should return list of 2 elements", () => {
-      expect(splitOnNewline(s).length).toBe(2);
+      expect(splitOnNewline(s)).toEqual(
+        expect.arrayContaining(["abc", "123"])
+      );
+    });
+
+    it("should split \r\n", () => {
+      s = "abc\r\n123";
+      expect(splitOnNewline(s)).toEqual(expect.arrayContaining(["abc", "123"]));
     });
 
     it("should return skip last element", () => {
