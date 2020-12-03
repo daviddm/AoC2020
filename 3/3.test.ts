@@ -42,18 +42,17 @@ describe("3", () => {
       expect(traverseMap(1, 2, inputs)).toBe(2);
     });
 
-    it("mupltiply", () => {
-      const results = [
-        traverseMap(1, 1, inputs),
-        traverseMap(3, 1, inputs),
-        traverseMap(5, 1, inputs),
-        traverseMap(7, 1, inputs),
-        traverseMap(1, 2, inputs),
-      ];
-      const product = results.reduce((total, result) => {
-        return total * result;
-      }, 1);
-      expect(product).toBe(336)
+    it("multiply", () => {
+      const product = [
+        [1, 1],
+        [3, 1],
+        [5, 1],
+        [7, 1],
+        [1, 2],
+      ]
+        .map(([x, y]) => traverseMap(x, y, inputs))
+        .reduce((total, result) => total * result, 1);
+      expect(product).toBe(336);
     });
   });
 
@@ -79,10 +78,15 @@ describe("3", () => {
         traverseMap(7, 1, lines),
         traverseMap(1, 2, lines),
       ];
-      logger.info("results", results);
-      const product = results.reduce((total, result) => {
-        return total * result;
-      }, 1);
+      const product = [
+        [1, 1],
+        [3, 1],
+        [5, 1],
+        [7, 1],
+        [1, 2],
+      ]
+        .map(([x, y]) => traverseMap(x, y, lines))
+        .reduce((total, result) => total * result, 1);
       logger.info("Star2: result multiplied");
       expect(product).toBe(2106818610);
     });
