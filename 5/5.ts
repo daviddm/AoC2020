@@ -9,69 +9,21 @@ export const getSeatId = (s: string): number => {
 };
 
 export const findEmptySeat = (boardingPasses: string[]): number => {
-  const seats: boolean[][] = Array.from(Array(128).keys(), () =>
-    Array.from(Array(8).keys(), () => false)
-  );
-  boardingPasses.forEach((boardingPass) => {
-    const row = decodeRow(boardingPass.slice(0, 7));
-    const col = decodeSeat(boardingPass.slice(7));
-    seats[row][col] = true;
-  });
-
-  let hasSeenOccupiedSeat = false;
-  let seatId = 0;
-  seats.every((row, i) => {
-    return row.every((seat, j) => {
-      if (!seat) {
-        if (hasSeenOccupiedSeat) {
-          seatId = calcSeatId(i, j);
-          return false;
-        }
-        return true;
-      }
-      hasSeenOccupiedSeat = true;
-      return true;
+  const seat = boardingPasses
+    .map((b) => getSeatId(b))
+    .sort((a, b) => a - b)
+    .find((_, i, arr) => {
+      return arr[i] + 1 !== arr[i + 1];
     });
-  });
-  return seatId;
+  return (seat as number) + 1;
 };
 
-export const decodeRow = (s: string, val = 127): number => {
-  const r = recursiveBound(s, val + 1, 0, val, { Up: "B", Down: "F" });
-  logger.debug("r", r);
-  return r;
+export const decodeRow = (s: string): number => {
+  const binary = s.replace(/B/g, "1").replace(/F/g, "0");
+  return parseInt(binary, 2);
 };
 
-export const decodeSeat = (s: string, val = 7): number => {
-  const r = recursiveBound(s, val + 1, 0, val, { Up: "R", Down: "L" });
-  logger.debug("r", r);
-  return r;
-};
-
-type Dir = {
-  Up: string;
-  Down: string;
-};
-
-const recursiveBound = (
-  s: string,
-  step: number,
-  lower: number,
-  upper: number,
-  dirs: Dir
-): number => {
-  logger.debug(s, step, lower, upper);
-  if (s.length === 0) {
-    logger.debug("end");
-    return lower;
-  }
-  const half = step / 2;
-  if (s[0] === dirs.Down) {
-    return recursiveBound(s.slice(1), half, lower, upper - half, dirs);
-  }
-  if (s[0] === dirs.Up) {
-    return recursiveBound(s.slice(1), half, lower + half, upper, dirs);
-  }
-  logger.error('FAIL')
-  return 0;
+export const decodeSeat = (s: string): number => {
+  const binary = s.replace(/R/g, "1").replace(/L/g, "0");
+  return parseInt(binary, 2);
 };
