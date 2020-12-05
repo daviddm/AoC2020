@@ -44,8 +44,8 @@ iyr:2011 ecl:brn hgt:59in`;
     });
 
     it("should return 4 passports", () => {
-      let passports = raw.split("\n\n").map((p) => p.replace(/\n/g, " "));
-      expect(parsePassportFile(raw).length).toBe(4);
+      let passports = parsePassportFile(raw)
+      expect(passports.length).toBe(4);
     });
 
     it("should return a passport", () => {
