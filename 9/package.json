@@ -1,0 +1,10 @@
+{
+  "name": "day9",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --watch --config ../jest.config.ts ./9"
+  },
+  "dependencies": {}
+}
