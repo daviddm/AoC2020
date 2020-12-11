@@ -1,5 +1,16 @@
 type Grid = string[][];
 
+const allDirections: [number, number][] = [
+  [0, -1],
+  [1, -1],
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+];
+
 enum Char {
   EmptyChair = "L",
   OccupiedChair = "#",
@@ -15,38 +26,62 @@ const isOccupiedSeat = (s: string) => s === Char.OccupiedChair;
 const isSeat = (s: string) => isEmptySeat(s) || isOccupiedSeat(s);
 const isFloor = (s: string) => s === Char.Floor;
 
-export const isCrowdedSeat = (x: number, y: number, grid: Grid) =>
-  isOccupiedSeat(grid[x][y]) && countOccupied(x, y, grid) >= 4;
+export const isCrowdedSeat = (
+  x: number,
+  y: number,
+  grid: Grid,
+  limit: number,
+  aggressive = false
+) => {
+    const occupied = allDirections
+      .map((dir) => getSeatInDir(x, y, grid, dir, !aggressive))
+      .reduce((total, seat) => (isOccupiedSeat(seat) ? total + 1 : total), 0);
 
-export const isSitableSeat = (x: number, y: number, grid: Grid) =>
-  isEmptySeat(grid[x][y]) && countOccupied(x, y, grid) === 0;
+    return occupied >= limit;
+};
 
-const countOccupied = (x: number, y: number, grid: Grid): number => {
-  let occupied = 0;
-  for (let i = x - 1; i <= x + 1 && i < grid.length; i++) {
-    if (i < 0) {
-      continue;
+export const isSuitableSeat = (
+  x: number,
+  y: number,
+  grid: Grid,
+  aggressive = false
+) => {
+    return allDirections
+      .map((dir) => getSeatInDir(x, y, grid, dir, !aggressive))
+      .every((seat) => !isOccupiedSeat(seat));
+};
+
+export const getSeatInDir = (
+  _x: number,
+  _y: number,
+  grid: Grid,
+  dir: [number, number],
+  onlyAdjacent = true
+): string => {
+  const [dx, dy] = dir;
+  let x = _x + dx;
+  let y = _y + dy;
+  while (grid[x] && grid[x][y]) {
+    if (isSeat(grid[x][y])) {
+      return grid[x][y];
     }
-
-    for (let j = y - 1; j <= y + 1 && j < grid[i].length; j++) {
-      if (j < 0) {
-        continue;
-      }
-      if (i === x && j === y) {
-        continue;
-      }
-
-      if (isOccupiedSeat(grid[i][j])) {
-        occupied++;
-      }
+    x += dx;
+    y += dy;
+    if (onlyAdjacent) {
+      return "-";
     }
   }
-  return occupied;
+
+  return "-";
 };
 
 const checksumGrid = (grid: Grid): string => grid.toString();
 
-export const simulate = (gridOrg: Grid) => {
+export const simulate = (
+  gridOrg: Grid,
+  occupiedLimit: number,
+  aggressive = false
+) => {
   let grid = gridOrg;
 
   let isStabilizes = false;
@@ -56,7 +91,7 @@ export const simulate = (gridOrg: Grid) => {
     // Fill empty seats
     grid = grid.map((line, i) => {
       return line.map((pos, j) => {
-        if (isSitableSeat(i, j, grid)) {
+        if (isSeat(grid[i][j]) && isSuitableSeat(i, j, grid, aggressive)) {
           return Char.OccupiedChair;
         }
         return pos;
@@ -66,7 +101,10 @@ export const simulate = (gridOrg: Grid) => {
     //Empty crowded seats
     grid = grid.map((line, i) => {
       return line.map((pos, j) => {
-        if (isCrowdedSeat(i, j, grid)) {
+        if (
+          isSeat(grid[i][j]) &&
+          isCrowdedSeat(i, j, grid, occupiedLimit, aggressive)
+        ) {
           return Char.EmptyChair;
         }
         return pos;
